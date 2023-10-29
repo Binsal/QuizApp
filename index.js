@@ -3,10 +3,13 @@ const URL = "https://opentdb.com/api.php?amount=5&category=19&difficulty=medium&
 const questionParent = document.querySelector(".question-container");
 const optionsParent  = document.querySelector(".option-container");
 const nextButton     = document.querySelector(".next");
-
+const quizCategory  = document.querySelector(".quiz-category");
+const qnsCount =    document.querySelector(".qns-count");
+const curScore = document.querySelector(".cur-score");
 
 let quizzes = [];
 let currentQuestionIndex = 0;
+let score=0;
 
 
 
@@ -30,6 +33,8 @@ const getQuizzes = async()=>{
 getQuizzes();
 
 function createQuestionAndOption(quizzes,index){
+   quizCategory.innerText = quizzes[index].category;
+   qnsCount.innerHTML = `Q${index+1}/${quizzes.length}`
    const questionEle = document.createElement("p");
    questionEle.innerText = quizzes[index].question;
    questionParent.appendChild(questionEle);
@@ -49,14 +54,26 @@ function createQuestionAndOption(quizzes,index){
 
 }
 
+function disableOption(){
+    document.
+        querySelectorAll(".button")
+        .forEach((button)=>(button.disabled)=true)
+}
+
 optionsParent.addEventListener("click",(e)=>{
     if(e.target.name===quizzes[currentQuestionIndex].correct_answer){
         e.target.classList.add("correct");
+        score++;
+        curScore.innerText = `Score : ${score}`;
+        disableOption();
     }
     else if(e.target.name !== quizzes[currentQuestionIndex].correct_answer){
         e.target.classList.add("incorrect");
+        disableOption();
     }
 })
+
+
 
 nextButton.addEventListener("click",()=>{
     currentQuestionIndex++;
